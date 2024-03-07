@@ -66,4 +66,54 @@ userController.registration = async (req, res) => {
   }
 };
 
+// login registered user
+userController.login = async (req, res) => {
+  // validate login credentials
+  const email = req.body.email ? req.body.email : null;
+  const password =
+    req.body.password && req.body.password.trim().length >= 4
+      ? req.body.password
+      : null;
+
+  try {
+    if (email && password) {
+      // find the user by email
+      const user = await User.findOne({ email }).lean();
+      // check if the user not exits
+      if (!user) {
+        return res.status(401).json({
+          status: "failed",
+          message: "Invalid email or password",
+        });
+      }
+
+      //  compare the provided password with the  stored hashed password
+      const isPasswordMatched = await bcrypt.compare(password, user.password);
+      if (!isPasswordMatched) {
+        return res.status(401).json({
+          status: "failed",
+          message: "Invalid email or password",
+        });
+      }
+
+      // exclude password form the user object
+      delete user.password;
+
+      res.status(200).json({
+        status: "success",
+        message: "Login successful",
+        data: user,
+      });
+    } else {
+      res.status(400).json({
+        status: "failed",
+        message: "Invalid email or password",
+      });
+    }
+  } catch (error) {
+    console.log(`ERROR ON USER LOGIN :: ${error.message}`);
+
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
 module.exports = userController;
