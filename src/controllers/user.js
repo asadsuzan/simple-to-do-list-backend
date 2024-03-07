@@ -2,6 +2,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 // module scaffolding
 const userController = {};
@@ -127,3 +128,28 @@ userController.login = async (req, res) => {
   }
 };
 module.exports = userController;
+
+// read user profile
+userController.readUserProfile = async (req, res) => {
+  // extract userId form request object
+  const { userId } = req;
+
+  try {
+    // find the user with userId
+    const user = await User.findById(userId).lean();
+
+    if (user) {
+      // exclude password form the user object
+      delete user.password;
+      res.status(200).json({ status: "success", data: user });
+    } else {
+      res
+        .status(404)
+        .json({ status: "failed", message: "user profile not found" });
+    }
+  } catch (error) {
+    console.log(`ERROR IN USER PROFILE READ :: ${error.message}`);
+
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
