@@ -17,6 +17,23 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDb connection error:"));
 db.once("open", () => console.log("MongoDb Connected"));
 
+// middleware to handle json parsing errors
+// app.use((error, req, res, next) => {
+//   if (error instanceof SyntaxError && error.status === 400 && "body" in error) {
+//     res.status(400).json({ error: "Invalid JSON in request body" });
+//   } else {
+//     next();
+//   }
+// });
+// Middleware to handle JSON parsing errors
+app.use((error, req, res, next) => {
+  if (error instanceof SyntaxError && error.status === 400 && "body" in error) {
+    res.status(400).json({ error: "Invalid JSON in request body" });
+  } else {
+    next();
+  }
+});
+
 // Middleware to parse json request\
 app.use(express.json());
 
