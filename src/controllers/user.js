@@ -20,13 +20,15 @@ userController.registration = async (req, res) => {
 
   try {
     if (userName && password && email) {
-      // check if the user already exits
-      const existingUser = await User.findOne({ email });
+      // check if the user already exists with the given userName or email
+      const existingUser = await User.findOne({
+        $or: [{ userName }, { email }],
+      });
 
       if (existingUser) {
         return res.status(400).json({
           status: "failed",
-          message: "User with this email already exists",
+          message: "User with this username or email already exists",
         });
       }
 
@@ -59,6 +61,7 @@ userController.registration = async (req, res) => {
     }
   } catch (error) {
     console.log(`ERROR ON USER REGISTER :: ${error.message}`);
+
     res.status(500).json({ status: "error", message: error.message });
   }
 };
