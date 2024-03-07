@@ -1,5 +1,6 @@
 //import required modules
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 // module scaffolding
 const userController = {};
@@ -29,14 +30,25 @@ userController.registration = async (req, res) => {
         });
       }
 
+      // hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       // create new user
-      const newUser = new User({ userName, password, email });
+      const newUser = new User({ userName, password: hashedPassword, email });
       // save the user to database
       await newUser.save();
+      // exclude password from the response
+      const userResponse = {
+        id: newUser._id,
+        userName,
+        email,
+        createdAt: newUser.createdAt,
+        updatedAt: newUser.updatedAt,
+      };
       res.status(201).json({
         status: "success",
         message: "User registered successfully",
-        data: newUser,
+        data: userResponse,
       });
     } else {
       res.status(400).json({
