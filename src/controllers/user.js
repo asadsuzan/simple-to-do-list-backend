@@ -1,6 +1,7 @@
 //import required modules
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // module scaffolding
 const userController = {};
@@ -98,11 +99,20 @@ userController.login = async (req, res) => {
 
       // exclude password form the user object
       delete user.password;
+      // generate a JWT token
+      const token = jwt.sign(
+        { userId: user._id, userEmail: user.email, userName: user.userName },
+        "your-secret-key",
+        {
+          expiresIn: "1h", // Token expiration time (optional)
+        }
+      );
 
       res.status(200).json({
         status: "success",
         message: "Login successful",
         data: user,
+        token: token,
       });
     } else {
       res.status(400).json({
