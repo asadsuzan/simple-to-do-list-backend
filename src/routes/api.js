@@ -1,6 +1,7 @@
 // import required modules
 const express = require("express");
 const userController = require("../controllers/user");
+const todoController = require("../controllers/todo");
 const jwtValidation = require("../middlewares/jwtValidation");
 
 // create router
@@ -16,11 +17,13 @@ router.post("/login", userController.login);
 
 // GET: READ USER PROFILE
 router.get("/user/profile/:id", jwtValidation, userController.readUserProfile);
-// GET: UPDATE USER PROFILE
+// PUT: UPDATE USER PROFILE
 router.put(
   "/user/profile/edit",
   jwtValidation,
   userController.updateUserProfile
 );
+// POST: CREATE NEW TODO
+router.post("/todo/create/new", jwtValidation, todoController.createTodo);
 
 module.exports = router;
