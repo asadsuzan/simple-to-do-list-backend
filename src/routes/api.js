@@ -25,5 +25,7 @@ router.put(
 );
 // POST: CREATE NEW TODO
 router.post("/todo/create/new", jwtValidation, todoController.createTodo);
+// GET: READ TODO LIST
+router.get("/todo/all", jwtValidation, todoController.readTodoList);
 
 module.exports = router;

@@ -53,4 +53,34 @@ todoController.createTodo = async (req, res) => {
   }
 };
 
+// read todo list
+todoController.readTodoList = async (req, res) => {
+  // extract userId from request header
+  const { userId } = req;
+
+  if (userId) {
+    try {
+      // find users todo list by userId extracted from req header
+      const todoList = await Todo.find({ userId });
+
+      res.status(201).json({
+        status: "success",
+        message: "All Todos",
+        data: todoList ? todoList : [],
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        status: "error",
+        message: "Internal server error",
+      });
+    }
+  } else {
+    res.status(404).json({
+      status: "failed",
+      message: "Invalid user id",
+    });
+  }
+};
+
 module.exports = todoController;
