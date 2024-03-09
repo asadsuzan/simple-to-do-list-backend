@@ -70,9 +70,10 @@ todoController.readTodoList = async (req, res) => {
       // find users todo list by userId extracted from req header
       const todoList = await Todo.find({ userId });
 
-      res.status(201).json({
+      res.status(200).json({
         status: "success",
         message: "All Todos",
+        count: todoList ? todoList.length : null,
         data: todoList ? todoList : [],
       });
     } catch (error) {
