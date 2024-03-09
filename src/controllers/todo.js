@@ -18,32 +18,39 @@ todoController.createTodo = async (req, res) => {
   const { userId } = req;
 
   if (title) {
-    // find user by userId extracted from req header
-    const user = await User.findById(userId);
+    try {
+      // find user by userId extracted from req header
+      const user = await User.findById(userId);
 
-    // check if user not exits
-    if (!user) {
-      return res.status(404).json({
-        status: "failed",
-        message: "No user found",
+      // check if user not exits
+      if (!user) {
+        return res.status(404).json({
+          status: "failed",
+          message: "No user found",
+        });
+      }
+
+      //  construct new todo
+      const todo = new Todo({
+        title: title,
+        description: description,
+        userId: userId,
+      });
+
+      // save the todo
+      await todo.save();
+
+      res.status(201).json({
+        status: "success",
+        message: "Todo added success",
+        data: todo,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: "error",
+        message: "Internal server error",
       });
     }
-
-    //  construct new todo
-    const todo = new Todo({
-      title: title,
-      description: description,
-      userId: userId,
-    });
-
-    // save the todo
-    await todo.save();
-
-    res.status(201).json({
-      status: "success",
-      message: "Todo added success",
-      data: todo,
-    });
   } else {
     res.status(400).json({
       status: "failed",
