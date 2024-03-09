@@ -115,6 +115,10 @@ todoController.readTodoById = async (req, res) => {
           message: `No Todo found associated with user:${userId} and todo:${todoId}`,
         });
       }
+      return res.status(200).json({
+        status: "success",
+        todo: todo,
+      });
     } catch (error) {
       res.status(500).json({
         status: "error",
@@ -125,6 +129,66 @@ todoController.readTodoById = async (req, res) => {
     res.status(404).json({
       status: "failed",
       message: "Invalid Todo id",
+    });
+  }
+};
+
+//update or edit todo
+
+todoController.updateTodo = async (req, res) => {
+  //validation
+  const title = req.body.title ? req.body.title : undefined;
+  const description = req.body.description ? req.body.description : undefined;
+  const completed =
+    typeof req.body.completed === "boolean" ? req.body.completed : undefined;
+  const todoId =
+    req.params.id && mongoose.Types.ObjectId.isValid(req.params.id)
+      ? req.params.id
+      : null;
+
+  // extract userId for request header
+  const { userId } = req;
+
+  if (todoId) {
+    //     find the todo associated with todoId and userId
+    const todo = await Todo.findOne({
+      $and: [{ _id: todoId }, { userId: userId }],
+    });
+
+    //     check if todo not found
+    if (!todo) {
+      return res.status(404).json({
+        status: "failed",
+        message: `  No todo found associated with user:${userId} and todo:${todoId}`,
+      });
+    }
+
+    // new todo
+    const newTodo = {
+      title: title ? title : todo.title,
+      description: description ? description : todo.description,
+      completed: typeof completed === "boolean" ? completed : todo.completed,
+    };
+
+    // update todo
+    todo.set(newTodo);
+
+    //   check any data modified
+    const isAnyDataUpdated = todo.isModified();
+
+    //     save data if only modified
+    if (isAnyDataUpdated) {
+      await todo.save();
+      return res
+        .status(201)
+        .json({ status: "success", message: "Todo Updated successfully" });
+    }
+
+    res.status(200).json({ status: "success", message: "No Data Updated" });
+  } else {
+    res.status(403).json({
+      status: "failed",
+      message: "Invalid token id",
     });
   }
 };

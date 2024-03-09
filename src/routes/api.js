@@ -29,5 +29,7 @@ router.post("/todo/create/new", jwtValidation, todoController.createTodo);
 router.get("/todo/all", jwtValidation, todoController.readTodoList);
 // GET: READ TODO by id
 router.get("/todo/:id", jwtValidation, todoController.readTodoById);
+// PUT: UPDATE OR EDIT TODO ITEM
+router.put("/todo/:id", jwtValidation, todoController.updateTodo);
 
 module.exports = router;
