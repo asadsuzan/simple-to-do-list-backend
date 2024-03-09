@@ -16,5 +16,11 @@ router.post("/login", userController.login);
 
 // GET: READ USER PROFILE
 router.get("/user/profile/:id", jwtValidation, userController.readUserProfile);
+// GET: UPDATE USER PROFILE
+router.put(
+  "/user/profile/edit",
+  jwtValidation,
+  userController.updateUserProfile
+);
 
 module.exports = router;

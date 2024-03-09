@@ -153,3 +153,68 @@ userController.readUserProfile = async (req, res) => {
     res.status(500).json({ status: "error", message: error.message });
   }
 };
+
+userController.updateUserProfile = async (req, res) => {
+  // extract userId form request header
+  const { userId } = req;
+
+  // extract update payload form request body
+  const userName =
+    req.body.userName && req.body.userName.trim().length >= 4
+      ? req.body.userName
+      : null;
+  const password =
+    req.body.password && req.body.password.trim().length >= 4
+      ? req.body.password
+      : null;
+
+  try {
+    // find the user with userId
+    const user = await User.findById(userId);
+
+    if (!user) {
+      // Handle case where user doesn't exist
+      return res
+        .status(404)
+        .json({ status: "failed", message: "User profile not found" });
+    }
+
+    // construct updated data
+    const updatedData = {
+      userName: userName ? userName : user.userName,
+      password: password ? await bcrypt.hash(password, 10) : user.password, // hashed the password
+    };
+
+    // update user data
+    user.set(updatedData);
+
+    // Check if any data is modified after updating
+    const isAnyDataModified = user.isModified();
+
+    // save updated data only if any data is modified
+    if (isAnyDataModified) {
+      await user.save();
+    }
+
+    //  delete the password property from the user object in the response
+    delete user._doc.password;
+
+    // send appropriate response based on whether data is modified
+    if (isAnyDataModified) {
+      res
+        .status(200)
+        .json({ status: "success", message: "profile updated", data: user });
+    } else {
+      res.status(200).json({ status: "success", message: "No data updated" });
+    }
+  } catch (error) {
+    console.log(`ERROR IN USER PROFILE UPDATE :: ${error.message}`);
+    if (error.name === "MongoServerError" && error.code === 11000) {
+      return res
+        .status(500)
+        .json({ status: "Duplicate key error", message: error.message });
+    }
+
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
