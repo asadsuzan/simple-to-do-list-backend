@@ -31,5 +31,7 @@ router.get("/todo/all", jwtValidation, todoController.readTodoList);
 router.get("/todo/:id", jwtValidation, todoController.readTodoById);
 // PUT: UPDATE OR EDIT TODO ITEM
 router.put("/todo/:id", jwtValidation, todoController.updateTodo);
+// DELETE: DELETE SINGLE TODO WITH TODO ID
+router.delete("/todo/:id", jwtValidation, todoController.deleteSingleTodo);
 
 module.exports = router;

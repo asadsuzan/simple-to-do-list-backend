@@ -193,4 +193,48 @@ todoController.updateTodo = async (req, res) => {
   }
 };
 
+// delete single todo item
+todoController.deleteSingleTodo = async (req, res) => {
+  // validation
+  const todoId =
+    req.params.id && mongoose.Types.ObjectId.isValid(req.params.id)
+      ? req.params.id
+      : null;
+
+  // extract userId from request header
+  const { userId } = req;
+
+  if (todoId) {
+    try {
+      // delete or remove todo associated with todoId and userId
+      const todo = await Todo.deleteOne({
+        $and: [{ userId: userId }, { _id: todoId }],
+      });
+
+      //     check if not deleted
+      if (todo.deletedCount === 0) {
+        return res.status(200).json({
+          status: "success",
+          message: `No todo found with todoId ${todoId}`,
+        });
+      }
+
+      res.status(200).json({
+        status: "success",
+        message: "Todo deleted Successfully ",
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: "error",
+        message: `Internal server error : ${error.message}`,
+      });
+    }
+  } else {
+    res.status(404).json({
+      status: "failed",
+      message: "Invalid Todo Id",
+    });
+  }
+};
+
 module.exports = todoController;
