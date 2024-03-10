@@ -1,0 +1,542 @@
+{
+	"info": {
+		"_postman_id": "f7cfa540-1d95-4857-8669-65800a711404",
+		"name": "TODO LIST REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32658314"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "User Registration",
+					"item": [
+						{
+							"name": "registration",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"Response status code is 201\", function () {",
+											"  pm.expect(pm.response.code).to.equal(201);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has the required fields - status, message, and data\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData).to.have.property('status');",
+											"  pm.expect(responseData).to.have.property('message');",
+											"  pm.expect(responseData).to.have.property('data');",
+											"});",
+											"",
+											"",
+											"pm.test(\"Data object contains expected fields\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.data).to.exist;",
+											"    pm.expect(responseData.data).to.have.property('id');",
+											"    pm.expect(responseData.data).to.have.property('userName');",
+											"    pm.expect(responseData.data).to.have.property('email');",
+											"    pm.expect(responseData.data).to.have.property('createdAt');",
+											"    pm.expect(responseData.data).to.have.property('updatedAt');",
+											"});",
+											"",
+											"",
+											"pm.test(\"Email is in a valid format\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.data.email).to.match(/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/);",
+											"});",
+											"",
+											"// Stores the userId in an environment or global variable",
+											"var responseData = pm.response.json();",
+											"var userId = responseData.data.id;",
+											"pm.globals.set(\"userId\", userId);",
+											"var template = `",
+											"<style type=\"text/css\">",
+											"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+											"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+											"    .tftable tr {background-color:#ffffff;}",
+											"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+											"    .tftable tr:hover {background-color:#e0ffff;}",
+											"</style>",
+											"",
+											"<table class=\"tftable\" border=\"1\">",
+											"    <tr>",
+											"        <th>Status</th>",
+											"        <th>Message</th>",
+											"    </tr>",
+											"    <tr>",
+											"        <td>{{response.status}}</td>",
+											"        <td>{{response.message}}</td>",
+											"    </tr>",
+											"</table>",
+											"`;",
+											"",
+											"function constructVisualizerPayload() {",
+											"    return {response: pm.response.json()}",
+											"}",
+											"",
+											"pm.visualizer.set(template, constructVisualizerPayload());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"test user\",\r\n    \"password\": \"1234\",\r\n    \"email\": \"testuser@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/user/registration",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"user",
+										"registration"
+									]
+								},
+								"description": "This endpoint allows users to register by creating a new user account. The HTTP POST request should be made to [http://localhost:3000/api/v1/user/registration](http://localhost:3000/api/v1/user/registration) with the required user details in the request body.\n\n### Request Body\n\n- userName (text, required): The username of the user.\n- password (text, required): The password for the user account.\n- email (text, required): The email address of the user.\n    \n\n### Response\n\nUpon successful registration, the endpoint returns a status code of 201 and a JSON response with the following structure:\n\n``` json\n{\n    \"status\": \"\",\n    \"message\": \"\",\n    \"data\": {\n        \"id\": \"\",\n        \"userName\": \"\",\n        \"email\": \"\",\n        \"createdAt\": \"\",\n        \"updatedAt\": \"\"\n    }\n}\n\n ```\n\n- status: Indicates the status of the registration process.\n- message: Provides additional information about the registration status.\n- data: Contains the details of the newly registered user, including their unique ID, username, email, creation timestamp, and last update timestamp."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User Login",
+					"item": [
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"testuser@gmail.com\",\r\n    \"password\": \"1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/user/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User Profile Read",
+					"item": [
+						{
+							"name": "profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVkOTFiMjY0YzkxMTlmZTAzZDc5OWUiLCJ1c2VyRW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJ1c2VyTmFtZSI6InRlc3QgdXNlciIsImlhdCI6MTcxMDA2ODIyMCwiZXhwIjoxNzEwMDcxODIwfQ.JLeANedDfKsPq7q73MtQyOZyVB5sr5a0t-3E_chd5vs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "rewqrewrwrw",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/user/profile/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"user",
+										"profile",
+										""
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "sfsfsfsf",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "testparms",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update User Profile",
+					"item": [
+						{
+							"name": "update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVkOTFiMjY0YzkxMTlmZTAzZDc5OWUiLCJ1c2VyRW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJ1c2VyTmFtZSI6InRlc3QgdXNlciIsImlhdCI6MTcxMDA2ODIyMCwiZXhwIjoxNzEwMDcxODIwfQ.JLeANedDfKsPq7q73MtQyOZyVB5sr5a0t-3E_chd5vs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"test username update\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/user/profile/edit",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"user",
+										"profile",
+										"edit"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Todo",
+			"item": [
+				{
+					"name": "Create New Todo",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVkOTFiMjY0YzkxMTlmZTAzZDc5OWUiLCJ1c2VyRW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJ1c2VyTmFtZSI6InRlc3QgdXNlciIsImlhdCI6MTcxMDA2ODIyMCwiZXhwIjoxNzEwMDcxODIwfQ.JLeANedDfKsPq7q73MtQyOZyVB5sr5a0t-3E_chd5vs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\":\"test todo\",\r\n    \"description\":\"test description\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/todo/create/new",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"todo",
+										"create",
+										"new"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Read All Todo",
+					"item": [
+						{
+							"name": "todos",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVkOTFiMjY0YzkxMTlmZTAzZDc5OWUiLCJ1c2VyRW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJ1c2VyTmFtZSI6InRlc3QgdXNlciIsImlhdCI6MTcxMDA2ODIyMCwiZXhwIjoxNzEwMDcxODIwfQ.JLeANedDfKsPq7q73MtQyOZyVB5sr5a0t-3E_chd5vs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/todo/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"todo",
+										"all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Read Single Todo",
+					"item": [
+						{
+							"name": "todo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVkOTFiMjY0YzkxMTlmZTAzZDc5OWUiLCJ1c2VyRW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJ1c2VyTmFtZSI6InRlc3QgdXNlciIsImlhdCI6MTcxMDA2ODIyMCwiZXhwIjoxNzEwMDcxODIwfQ.JLeANedDfKsPq7q73MtQyOZyVB5sr5a0t-3E_chd5vs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/todo/65ed92deb19969f304fd7c8d",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"todo",
+										"65ed92deb19969f304fd7c8d"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update Single Todo",
+					"item": [
+						{
+							"name": "update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVkOTFiMjY0YzkxMTlmZTAzZDc5OWUiLCJ1c2VyRW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJ1c2VyTmFtZSI6InRlc3QgdXNlciIsImlhdCI6MTcxMDA2ODIyMCwiZXhwIjoxNzEwMDcxODIwfQ.JLeANedDfKsPq7q73MtQyOZyVB5sr5a0t-3E_chd5vs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"test todo update\",\r\n    \"description\": \"test description\",\r\n    \"completed\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/todo/65ed92deb19969f304fd7c8d",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"todo",
+										"65ed92deb19969f304fd7c8d"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete Single Todo",
+					"item": [
+						{
+							"name": "delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVkOTFiMjY0YzkxMTlmZTAzZDc5OWUiLCJ1c2VyRW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJ1c2VyTmFtZSI6InRlc3QgdXNlciIsImlhdCI6MTcxMDA2ODIyMCwiZXhwIjoxNzEwMDcxODIwfQ.JLeANedDfKsPq7q73MtQyOZyVB5sr5a0t-3E_chd5vs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/todo/65ed92deb19969f304fd7c8d",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"todo",
+										"65ed92deb19969f304fd7c8d"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update Todo Status",
+					"item": [
+						{
+							"name": "update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVkOTFiMjY0YzkxMTlmZTAzZDc5OWUiLCJ1c2VyRW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJ1c2VyTmFtZSI6InRlc3QgdXNlciIsImlhdCI6MTcxMDA2ODIyMCwiZXhwIjoxNzEwMDcxODIwfQ.JLeANedDfKsPq7q73MtQyOZyVB5sr5a0t-3E_chd5vs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/todo/65ed93a2b19969f304fd7c9c/false/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"todo",
+										"65ed93a2b19969f304fd7c9c",
+										"false",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url\n",
+			"value": "http://localhost:3000/api/v1/",
+			"type": "string"
+		}
+	]
+}
