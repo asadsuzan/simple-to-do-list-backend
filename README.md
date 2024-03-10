@@ -16,7 +16,7 @@ Todo List Rest Api
 
 ## Getting Started
 
-### For better understanding of the endpoints, please download the [TODO LIST REST API.postman_collection.json](https://github.com/asadsuzan/simple-to-do-list-backend/blob/main/API.postman_collection.json) file and import it to Postman.
+### For better understanding of the endpoints, please download the [TODO LIST REST API.postman_collection.json] file and import it to Postman.
 
 Follow these steps to set up and run the project locally:
 
