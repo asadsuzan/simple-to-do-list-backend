@@ -237,4 +237,80 @@ todoController.deleteSingleTodo = async (req, res) => {
   }
 };
 
+// update todo status is completed or not
+todoController.updateTodoStatus = async (req, res) => {
+  // validation
+  const todoId =
+    req.params.id && mongoose.Types.ObjectId.isValid(req.params.id)
+      ? req.params.id
+      : null;
+
+  const completed =
+    (req.params.complete &&
+      req.params.complete.trim().length !== 0 &&
+      req.params.complete.toLowerCase() === "true") ||
+    req.params.complete.toLowerCase() === "false"
+      ? JSON.parse(req.params.complete.toLowerCase())
+      : undefined;
+
+  // extract userId from request header
+  const { userId } = req;
+
+  if (todoId) {
+    // find and update todo status associated with userId and todoId
+
+    const todo = await Todo.findOne({
+      $and: [{ _id: todoId }, { userId: userId }],
+    });
+
+    // check if todo not found
+    if (!todo) {
+      return res.status(404).json({
+        status: "failed",
+        message: `No todo found associated with user ${userId} and todo ${todoId}`,
+      });
+    }
+
+    // new todo
+    const newTodo = {
+      title: todo.title,
+      description: todo.description,
+      completed: typeof completed === "boolean" ? completed : todo.completed,
+    };
+
+    //  update todo status
+    todo.set(newTodo);
+
+    // check status updated or not
+    const isStatusUpdated = todo.isModified();
+
+    // save todo only if status updated
+    if (isStatusUpdated) {
+      await todo.save();
+      return res.status(200).json({
+        status: "success",
+        message: "Todo updated successfully",
+        data: newTodo,
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "No Data Updated",
+    });
+    try {
+    } catch (error) {
+      res.status(500).json({
+        status: "error",
+        message: `Internal server error: ${error.message} `,
+      });
+    }
+  } else {
+    res.status(404).json({
+      status: "failed",
+      message: `No Todo found associated with  id ${todoId}`,
+    });
+  }
+};
+
 module.exports = todoController;

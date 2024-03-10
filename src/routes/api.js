@@ -34,4 +34,11 @@ router.put("/todo/:id", jwtValidation, todoController.updateTodo);
 // DELETE: DELETE SINGLE TODO WITH TODO ID
 router.delete("/todo/:id", jwtValidation, todoController.deleteSingleTodo);
 
+// PUT: UPDATE  SINGLE TODO STATUS WITH TODO ID
+router.put(
+  "/todo/:id/:complete",
+  jwtValidation,
+  todoController.updateTodoStatus
+);
+
 module.exports = router;
