@@ -11,12 +11,12 @@ const router = express.Router();
 router.get("/", (req, res) => res.json({ status: "UP" }));
 
 //POST :register new user
-router.post("/registration", userController.registration);
+router.post("/user/registration", userController.registration);
 //POST : login registered user
-router.post("/login", userController.login);
+router.post("/user/login", userController.login);
 
 // GET: READ USER PROFILE
-router.get("/user/profile/:id", jwtValidation, userController.readUserProfile);
+router.get("/user/profile", jwtValidation, userController.readUserProfile);
 // PUT: UPDATE USER PROFILE
 router.put(
   "/user/profile/edit",
