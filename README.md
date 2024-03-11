@@ -24,6 +24,10 @@ Follow these steps to set up and run the project locally:
 2. Install dependencies: `npm install`
 3. Start the development server: `npm run dev`
 
+### BASE URL
+
+## `http://localhost:3000/api/v1`
+
 # USER MANAGEMENT
 
 # User Registration
