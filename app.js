@@ -10,7 +10,7 @@ const app = express();
 // Connect to the MongoDB database using the configuration
 // const mongoURI = `mongodb://localhost:27017/todolist`;
 const mongoURI = `mongodb+srv://asadsuzan7:2FcjALgZgUCvkarw@cluster0.v8mwohh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-const options = { userName: "", password: "" };
+const options = {};
 mongoose.connect(mongoURI, options);
 
 //Check if the mongoose connection is successful
